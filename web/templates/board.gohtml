@@ -1,1 +1,15 @@
-Hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>글 목록</title>
+</head>
+<body>
+    {{range .}}
+        <a href="/post?id={{.ID}}">글 제목: {{.Title}}</a><br>
+        작성자: {{.Author}}
+        PID: {{.ID}}
+        <br><br>
+    {{ end }}
+</body>
+</html>

@@ -5,16 +5,19 @@ import (
 	"fmt"
 	"net/http"
 	"text/template"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type Board struct {
-	gorm.Model
-	Title   string
-	Author  string
-	Content string
+	ID        uint `gorm:"primarykey"`
+	CreatedAt *time.Time
+	UpdatedAt *time.Time
+	Title     string
+	Author    string
+	Content   string
 }
 
 var (
@@ -23,12 +26,12 @@ var (
 )
 
 func init() {
-	tpl = template.Must(template.ParseGlob("web/templates/*html"))
+	tpl = template.Must(template.ParseGlob("web/templates/*.gohtml"))
 }
 
 func main() {
 
-	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", user, password, host, database)
+	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True", user, password, host, database)
 	mysqlDB, err := sql.Open("mysql", connectionString)
 	defer mysqlDB.Close()
 
@@ -45,6 +48,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/write", write)
 	http.HandleFunc("/board", board)
+	http.HandleFunc("/post/", post)
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
 	fmt.Println("Listening ... !")
@@ -69,6 +73,7 @@ func write(w http.ResponseWriter, r *http.Request) {
 		gormDB.Create(&newPost)
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		// http.Redirect(w, r, "/board?id=20", http.StatusSeeOther)
 		return
 	}
 
@@ -76,6 +81,27 @@ func write(w http.ResponseWriter, r *http.Request) {
 }
 
 func board(w http.ResponseWriter, r *http.Request) {
+	var b []Board
 
-	tpl.ExecuteTemplate(w, "board.gohtml", nil)
+	// gormDB.Select("id", "title", "author").Find(&b)
+	gormDB.Limit(10).Offset(0).Find(&b)
+	// gormDB.Find(&b)
+	// gormDB.First(&b)
+
+	fmt.Println(b)
+
+	tpl.ExecuteTemplate(w, "board.gohtml", b)
+}
+
+func post(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	fmt.Println("param id=", id)
+	var b Board
+	// gormDB.First(&b, "id = ?", id)
+	gormDB.First(&b, id)
+
+	fmt.Println(b)
+
+	tpl.ExecuteTemplate(w, "post.gohtml", b)
+
 }
