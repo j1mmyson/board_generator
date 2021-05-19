@@ -6,11 +6,18 @@
     <link rel="stylesheet" href="/web/static/css/style.css">
 </head>
 <body>
+    <div class="main_title">
+        <h2><a href="/">@ board generator</a></h2>
+    </div>
+    <div class="sub_title">
+        <h3>글 목록</h3>
+    </div>
     {{range .}}
-        <a href="/post?id={{.ID}}">글 제목: {{.Title}}</a><br>
-        작성자: {{.Author}}
-        PID: {{.ID}}
-        <br><br>
+        <div class="post_box">
+            <a href="/post?id={{.ID}}">{{.Title}}</a><br>
+            {{.ID}} | {{.Author}} |
+            <br><br>
+        </div>
     {{ end }}
 </body>
 </html>

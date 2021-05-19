@@ -1,21 +1,65 @@
 body{
     font-family: sans-serif;
-    background-color: cornsilk;
-    color: black;
+    background-color:rgb(37, 44, 44);
+    color: floralwhite;
 }
+
+
+a{
+    font-size: larger;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:link{color:floralwhite;}
+a:visited{color: floralwhite;}
 
 .input{
     text-align: center;
 }
 
+.sub_title {
+    padding-top: 30px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    align-content: center;
+    color:floralwhite;
+    text-align: center;
+    width: 40%;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
+.main_title {
+    padding-top: 3%;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: large;
+    align-content: center;
+    color: floralwhite;
+    text-align: center;
+    width: 40%;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+
 .body_center{
+    padding-top: 10%;
     text-align: center;
     width: 40%;
     padding-left: 30%;
     padding-right: 30%;
     height:fit-content;
-    padding-top: 20%;
+    
     padding-bottom: 20%;
+}
+
+.post_box {
+    /* padding-right: 5%; */
+    padding-left: 1%;
+    margin-left: 20%;
+    width: 60%;
+    margin-right: 20%;
+    border: 1px solid grey;
 }
 
 .button1 {
