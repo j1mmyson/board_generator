@@ -13,8 +13,8 @@ import (
 
 type Board struct {
 	ID        uint `gorm:"primarykey"`
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	Title     string
 	Author    string
 	Content   string
@@ -67,13 +67,11 @@ func write(w http.ResponseWriter, r *http.Request) {
 		author := r.PostFormValue("author")
 		content := r.PostFormValue("content")
 
-		fmt.Println("title:", title, "\nauthor:", author, "\ncontent:", content)
-
 		newPost := Board{Title: title, Author: author, Content: content}
 		gormDB.Create(&newPost)
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		// http.Redirect(w, r, "/board?id=20", http.StatusSeeOther)
+
 		return
 	}
 
@@ -88,20 +86,15 @@ func board(w http.ResponseWriter, r *http.Request) {
 	// gormDB.Find(&b)
 	// gormDB.First(&b)
 
-	fmt.Println(b)
-
 	tpl.ExecuteTemplate(w, "board.gohtml", b)
 }
 
 func post(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
-	fmt.Println("param id=", id)
-	var b Board
-	// gormDB.First(&b, "id = ?", id)
-	gormDB.First(&b, id)
 
-	fmt.Println(b)
+	var b Board
+	gormDB.First(&b, id)
+	// gormDB.First(&b, "id = ?", id)
 
 	tpl.ExecuteTemplate(w, "post.gohtml", b)
-
 }
