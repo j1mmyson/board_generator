@@ -47,7 +47,7 @@ func main() {
 
 	http.HandleFunc("/", index)
 	http.HandleFunc("/write", write)
-	http.HandleFunc("/board", board)
+	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
@@ -70,7 +70,8 @@ func write(w http.ResponseWriter, r *http.Request) {
 		newPost := Board{Title: title, Author: author, Content: content}
 		gormDB.Create(&newPost)
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		// http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/", http.StatusCreated)
 
 		return
 	}
@@ -81,8 +82,25 @@ func write(w http.ResponseWriter, r *http.Request) {
 func board(w http.ResponseWriter, r *http.Request) {
 	var b []Board
 
+	if keyword := r.FormValue("v"); keyword != "" {
+		target := r.FormValue("target")
+
+		switch target {
+		case "title":
+			gormDB.Where("title LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
+			tpl.ExecuteTemplate(w, "board.gohtml", b)
+			return
+		case "author":
+			gormDB.Where("author LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
+			tpl.ExecuteTemplate(w, "board.gohtml", b)
+			return
+		}
+
+	}
+
+	gormDB.Order("id desc").Limit(10).Offset(0).Find(&b)
+	// gormDB.Limit(10).Offset(0).Find(&b)
 	// gormDB.Select("id", "title", "author").Find(&b)
-	gormDB.Limit(10).Offset(0).Find(&b)
 	// gormDB.Find(&b)
 	// gormDB.First(&b)
 
