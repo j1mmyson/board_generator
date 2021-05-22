@@ -4,8 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 	"text/template"
 	"time"
+
+	"github.com/vcraescu/go-paginator/v2"
+	"github.com/vcraescu/go-paginator/v2/adapter"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -49,6 +53,7 @@ func main() {
 	http.HandleFunc("/write", write)
 	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
+	http.HandleFunc("/test", test)
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
 	fmt.Println("Listening ... !")
@@ -58,6 +63,12 @@ func main() {
 func index(w http.ResponseWriter, r *http.Request) {
 
 	tpl.ExecuteTemplate(w, "index.gohtml", nil)
+}
+
+func test(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/board?target=title&v=writing", http.StatusAccepted)
+	return
+
 }
 
 func write(w http.ResponseWriter, r *http.Request) {
@@ -70,8 +81,8 @@ func write(w http.ResponseWriter, r *http.Request) {
 		newPost := Board{Title: title, Author: author, Content: content}
 		gormDB.Create(&newPost)
 
-		// http.Redirect(w, r, "/", http.StatusSeeOther)
-		http.Redirect(w, r, "/", http.StatusCreated)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		// http.Redirect(w, r, "/", http.StatusCreated)
 
 		return
 	}
@@ -82,12 +93,25 @@ func write(w http.ResponseWriter, r *http.Request) {
 func board(w http.ResponseWriter, r *http.Request) {
 	var b []Board
 
+	page := r.FormValue("page")
+	if page == "" {
+		page = "1"
+	}
+	pageInt, _ := strconv.Atoi(page)
+
 	if keyword := r.FormValue("v"); keyword != "" {
 		target := r.FormValue("target")
 
 		switch target {
 		case "title":
-			gormDB.Where("title LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
+			q := gormDB.Where("title LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
+			pg := paginator.New(adapter.NewGORMAdapter(q), 3)
+			pg.SetPage(pageInt)
+
+			if err := pg.Results(&b); err != nil {
+				panic(err)
+			}
+
 			tpl.ExecuteTemplate(w, "board.gohtml", b)
 			return
 		case "author":
@@ -98,7 +122,16 @@ func board(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	gormDB.Order("id desc").Limit(10).Offset(0).Find(&b)
+	q := gormDB.Order("id desc").Limit(10).Offset(0).Find(&b)
+	pg := paginator.New(adapter.NewGORMAdapter(q), 3)
+
+	pg.SetPage(pageInt)
+
+	if err := pg.Results(&b); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("page:", pageInt, "\nboards:", b)
 	// gormDB.Limit(10).Offset(0).Find(&b)
 	// gormDB.Select("id", "title", "author").Find(&b)
 	// gormDB.Find(&b)
