@@ -24,9 +24,27 @@ type Board struct {
 	Content   string
 }
 
+// type Page struct {
+// 	target string
+// 	value string
+// 	page []string
+// }
+
+type PassedData struct {
+	PostData []Board
+	Target   string
+	Value    string
+	PageList []string
+	Page     string
+}
+
 var (
 	tpl    *template.Template
 	gormDB *gorm.DB
+)
+
+const (
+	MaxPerPage = 5
 )
 
 func init() {
@@ -97,6 +115,7 @@ func board(w http.ResponseWriter, r *http.Request) {
 	if page == "" {
 		page = "1"
 	}
+
 	pageInt, _ := strconv.Atoi(page)
 
 	if keyword := r.FormValue("v"); keyword != "" {
@@ -105,25 +124,51 @@ func board(w http.ResponseWriter, r *http.Request) {
 		switch target {
 		case "title":
 			q := gormDB.Where("title LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
-			pg := paginator.New(adapter.NewGORMAdapter(q), 3)
+			pg := paginator.New(adapter.NewGORMAdapter(q), MaxPerPage)
 			pg.SetPage(pageInt)
 
 			if err := pg.Results(&b); err != nil {
 				panic(err)
 			}
+			pgNums, _ := pg.PageNums()
+			pageSlice := getPageList(page, pgNums)
 
-			tpl.ExecuteTemplate(w, "board.gohtml", b)
+			temp := PassedData{
+				PostData: b,
+				Target:   target,
+				Value:    keyword,
+				PageList: pageSlice,
+			}
+
+			// tpl.ExecuteTemplate(w, "board.gohtml", b)
+			tpl.ExecuteTemplate(w, "board.gohtml", temp)
 			return
 		case "author":
-			gormDB.Where("author LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
-			tpl.ExecuteTemplate(w, "board.gohtml", b)
+			q := gormDB.Where("author LIKE ?", fmt.Sprintf("%%%s%%", keyword)).Find(&b)
+			pg := paginator.New(adapter.NewGORMAdapter(q), MaxPerPage)
+			pg.SetPage(pageInt)
+
+			if err := pg.Results(&b); err != nil {
+				panic(err)
+			}
+			pgNums, _ := pg.PageNums()
+			pageSlice := getPageList(page, pgNums)
+
+			temp := PassedData{
+				PostData: b,
+				Target:   target,
+				Value:    keyword,
+				PageList: pageSlice,
+			}
+
+			// tpl.ExecuteTemplate(w, "board.gohtml", b)
+			tpl.ExecuteTemplate(w, "board.gohtml", temp)
 			return
 		}
-
 	}
 
-	q := gormDB.Order("id desc").Limit(10).Offset(0).Find(&b)
-	pg := paginator.New(adapter.NewGORMAdapter(q), 3)
+	q := gormDB.Order("id desc").Find(&b)
+	pg := paginator.New(adapter.NewGORMAdapter(q), MaxPerPage)
 
 	pg.SetPage(pageInt)
 
@@ -131,13 +176,15 @@ func board(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	fmt.Println("page:", pageInt, "\nboards:", b)
-	// gormDB.Limit(10).Offset(0).Find(&b)
-	// gormDB.Select("id", "title", "author").Find(&b)
-	// gormDB.Find(&b)
-	// gormDB.First(&b)
+	pgNums, _ := pg.PageNums()
+	pageSlice := getPageList(page, pgNums)
 
-	tpl.ExecuteTemplate(w, "board.gohtml", b)
+	temp := PassedData{
+		PostData: b,
+		PageList: pageSlice,
+	}
+
+	tpl.ExecuteTemplate(w, "board.gohtml", temp)
 }
 
 func post(w http.ResponseWriter, r *http.Request) {
@@ -148,4 +195,16 @@ func post(w http.ResponseWriter, r *http.Request) {
 	// gormDB.First(&b, "id = ?", id)
 
 	tpl.ExecuteTemplate(w, "post.gohtml", b)
+}
+
+func getPageList(p string, limit int) []string {
+	page, _ := strconv.Atoi(p)
+	var result []string
+
+	for i := page - 2; i <= page+2; i++ {
+		if i > 0 && i <= limit {
+			result = append(result, strconv.Itoa(i))
+		}
+	}
+	return result
 }

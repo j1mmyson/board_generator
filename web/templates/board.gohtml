@@ -6,19 +6,30 @@
     <link rel="stylesheet" href="/web/static/css/style.css">
 </head>
 <body>
+    {{$target := .Target}}
+    {{$value := .Value}}
+
     <div class="main_title">
         <h2><a href="/">@ board generator</a></h2>
     </div>
     <div class="sub_title">
         <h3>글 목록</h3>
     </div>
-    {{range .}}
+    {{range .PostData}}
         <div class="post_box">
             <a href="/post?id={{.ID}}">{{.Title}}</a><br>
             {{.ID}} | {{.Author}} |
             <br><br>
         </div>
     {{ end }}
+    
+    <div class="page">
+        {{ range .PageList }}
+        <a href="/board/?target={{$target}}&v={{$value}}&page={{ . }}">{{ . }}</a>
+        {{ end }}
+    </div>
+
+
     <div class="sub_title">
         <form method="post">
             <select name="target">
