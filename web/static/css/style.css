@@ -42,6 +42,12 @@ a:visited{color: floralwhite;}
     padding-right: 30%;
 }
 
+.page {
+    width: 100%;
+    align-content: center;
+    text-align: center;
+}
+
 .body_center{
     padding-top: 10%;
     text-align: center;
