@@ -71,7 +71,6 @@ func main() {
 	http.HandleFunc("/write", write)
 	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
-	http.HandleFunc("/test", test)
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
 	fmt.Println("Listening ... !")
@@ -79,14 +78,7 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-
 	tpl.ExecuteTemplate(w, "index.gohtml", nil)
-}
-
-func test(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/board?target=title&v=writing", http.StatusAccepted)
-	return
-
 }
 
 func write(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +92,6 @@ func write(w http.ResponseWriter, r *http.Request) {
 		gormDB.Create(&newPost)
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		// http.Redirect(w, r, "/", http.StatusCreated)
 
 		return
 	}
@@ -141,7 +132,6 @@ func board(w http.ResponseWriter, r *http.Request) {
 				Page:     page,
 			}
 
-			// tpl.ExecuteTemplate(w, "board.gohtml", b)
 			tpl.ExecuteTemplate(w, "board.gohtml", temp)
 			return
 		case "author":
@@ -163,7 +153,6 @@ func board(w http.ResponseWriter, r *http.Request) {
 				Page:     page,
 			}
 
-			// tpl.ExecuteTemplate(w, "board.gohtml", b)
 			tpl.ExecuteTemplate(w, "board.gohtml", temp)
 			return
 		}
@@ -195,7 +184,6 @@ func post(w http.ResponseWriter, r *http.Request) {
 
 	var b Board
 	gormDB.First(&b, id)
-	// gormDB.First(&b, "id = ?", id)
 
 	tpl.ExecuteTemplate(w, "post.gohtml", b)
 }
