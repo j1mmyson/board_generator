@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -24,12 +25,6 @@ type Board struct {
 	Content   string
 }
 
-// type Page struct {
-// 	target string
-// 	value string
-// 	page []string
-// }
-
 type PassedData struct {
 	PostData []Board
 	Target   string
@@ -41,6 +36,8 @@ type PassedData struct {
 var (
 	tpl    *template.Template
 	gormDB *gorm.DB
+	//go:embed web
+	staticContent embed.FS
 )
 
 const (
@@ -48,7 +45,8 @@ const (
 )
 
 func init() {
-	tpl = template.Must(template.ParseGlob("web/templates/*.gohtml"))
+	// tpl = template.Must(template.ParseGlob("web/templates/*.gohtml"))
+	tpl = template.Must(template.ParseFS(staticContent, "web/templates/*"))
 }
 
 func main() {
@@ -71,7 +69,8 @@ func main() {
 	http.HandleFunc("/write", write)
 	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
-	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
+	// http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
+	http.Handle("/web/", http.FileServer(http.FS(staticContent)))
 
 	fmt.Println("Listening ... !")
 	http.ListenAndServe(":8080", nil)
