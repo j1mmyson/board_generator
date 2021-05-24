@@ -8,6 +8,7 @@
 <body>
     {{$target := .Target}}
     {{$value := .Value}}
+    {{$page := .Page}}
 
     <div class="main_title">
         <h2><a href="/">@ board generator</a></h2>
@@ -25,7 +26,11 @@
     
     <div class="page">
         {{ range .PageList }}
-        <a href="/board/?target={{$target}}&v={{$value}}&page={{ . }}">{{ . }}</a>
+            {{ if (eq . $page) }}
+                <strong style="color:crimson;text-decoration:underline;">{{ . }}</strong>
+            {{else}}
+                <a href="/board/?target={{$target}}&v={{$value}}&page={{ . }}">{{ . }}</a>
+            {{ end }}
         {{ end }}
     </div>
 

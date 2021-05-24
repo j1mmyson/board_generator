@@ -138,6 +138,7 @@ func board(w http.ResponseWriter, r *http.Request) {
 				Target:   target,
 				Value:    keyword,
 				PageList: pageSlice,
+				Page:     page,
 			}
 
 			// tpl.ExecuteTemplate(w, "board.gohtml", b)
@@ -159,6 +160,7 @@ func board(w http.ResponseWriter, r *http.Request) {
 				Target:   target,
 				Value:    keyword,
 				PageList: pageSlice,
+				Page:     page,
 			}
 
 			// tpl.ExecuteTemplate(w, "board.gohtml", b)
@@ -182,6 +184,7 @@ func board(w http.ResponseWriter, r *http.Request) {
 	temp := PassedData{
 		PostData: b,
 		PageList: pageSlice,
+		Page:     page,
 	}
 
 	tpl.ExecuteTemplate(w, "board.gohtml", temp)
