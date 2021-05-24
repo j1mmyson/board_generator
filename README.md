@@ -1,3 +1,9 @@
+## Link
+
+<http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
+
+![Index Page](https://github.com/j1mmyson/board_generator/blob/main/img/indexPage.PNG?raw=true)
+
 ## Done
 
 - 글 쓰기
