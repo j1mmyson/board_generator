@@ -6,6 +6,9 @@
     <title>{{.Title}}</title>
 </head>
 <body>
+    <div style="text-align: end;">
+        <button type="button" class="buttonDelete" onclick="location.href='/delete/{{.ID}}'">삭제</button>
+    </div>
     <h1> {{.Title}} </h1>
     <h3> 작성자: {{.Author}} </h3>
     <h3> 작성 시각: {{.CreatedAt}} </h3>

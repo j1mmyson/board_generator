@@ -18,6 +18,18 @@ a:visited{color: floralwhite;}
     text-align: center;
 }
 
+.buttonDelete {
+    background-color: crimson;
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color:darkblue;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+}
+
 .sub_title {
     padding-top: 30px;
     font-family:Arial, Helvetica, sans-serif;
@@ -81,6 +93,19 @@ a:visited{color: floralwhite;}
 }
 
 .button1:hover {
+    cursor: pointer;
+    background-color: darkslategrey;
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: darkgray;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.buttonDelete:hover {
     cursor: pointer;
     background-color: darkslategrey;
     border-radius: 5px;
