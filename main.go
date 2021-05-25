@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"text/template"
 	"time"
 
@@ -69,6 +70,7 @@ func main() {
 	http.HandleFunc("/write", write)
 	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
+	http.HandleFunc("/delete/", delete)
 	// http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 	http.Handle("/web/", http.FileServer(http.FS(staticContent)))
 
@@ -78,6 +80,13 @@ func main() {
 
 func index(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", nil)
+}
+
+func delete(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/delete/")
+	gormDB.Delete(&Board{}, id)
+
+	http.Redirect(w, r, "/board", http.StatusSeeOther)
 }
 
 func write(w http.ResponseWriter, r *http.Request) {
