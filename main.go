@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"embed"
 	"fmt"
@@ -71,7 +72,7 @@ func main() {
 	http.HandleFunc("/board/", board)
 	http.HandleFunc("/post/", post)
 	http.HandleFunc("/delete/", delete)
-	// http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
+	http.HandleFunc("/edit/", edit)
 	http.Handle("/web/", http.FileServer(http.FS(staticContent)))
 
 	fmt.Println("Listening ... !")
@@ -80,6 +81,26 @@ func main() {
 
 func index(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", nil)
+}
+
+func edit(w http.ResponseWriter, r *http.Request) {
+
+	id := strings.TrimPrefix(r.URL.Path, "/edit/")
+	var b Board
+
+	gormDB.First(&b, id)
+
+	if r.Method == http.MethodPost {
+
+		gormDB.Model(&b).Updates(Board{Title: r.PostFormValue("title"), Author: r.PostFormValue("author"), Content: r.PostFormValue("content")})
+		var byteBuf bytes.Buffer
+		byteBuf.WriteString("/post/")
+		byteBuf.WriteString(id)
+		http.Redirect(w, r, byteBuf.String(), http.StatusSeeOther)
+
+	}
+
+	tpl.ExecuteTemplate(w, "write.gohtml", b)
 }
 
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -188,7 +209,8 @@ func board(w http.ResponseWriter, r *http.Request) {
 }
 
 func post(w http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("id")
+	// id := r.FormValue("id")
+	id := strings.TrimPrefix(r.URL.Path, "/post/")
 
 	var b Board
 	gormDB.First(&b, id)
