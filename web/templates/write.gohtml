@@ -7,11 +7,15 @@
 </head>
 <body>
     <form action="" method="POST">
-        제목: <input id="title" class="title" name="title" type="text"><br>
-        작성자: <input id="author" class="author" name="author" type="text"><br>
+        제목: <input id="title" class="title" name="title" type="text" value="{{.Title}}"><br>
+        작성자: <input id="author" class="author" name="author" type="text" value="{{.Author}}"><br>
         <label for="content">본문:</label><br>
-        <textarea id="content" class="content" name="content" cols="60" rows="20"></textarea>
+        <textarea id="content" class="content" name="content" cols="60" rows="20">{{.Content}}</textarea>
+        {{ if . }}
+        <input type="submit" value="수정하기">
+        {{ else }}
         <input type="submit" value="글쓰기">
+        {{ end }}
     </form>
     
 </body>

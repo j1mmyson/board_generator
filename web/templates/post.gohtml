@@ -6,10 +6,11 @@
     <title>{{.Title}}</title>
 </head>
 <body>
-    <div style="text-align: end;">
-        <button type="button" class="buttonDelete" onclick="location.href='/delete/{{.ID}}'">삭제</button>
-    </div>
+    <!-- <div style="text-align: end;">
+    </div> -->
     <h1> {{.Title}} </h1>
+    <button type="button" class="buttonEdit" onclick="location.href='/edit/{{.ID}}'">수정</button>
+    <button type="button" class="buttonDelete" onclick="location.href='/delete/{{.ID}}'">삭제</button>
     <h3> 작성자: {{.Author}} </h3>
     <h3> 작성 시각: {{.CreatedAt}} </h3>
     <h3> 본문 </h3>

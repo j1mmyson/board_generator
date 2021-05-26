@@ -18,13 +18,54 @@ a:visited{color: floralwhite;}
     text-align: center;
 }
 
+.buttonEdit {
+    background-color: skyblue;
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color:ivory;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    border: none;
+}
+
+.buttonEdit:hover {
+    cursor: pointer;
+    background-color: rgb(59, 159, 199);
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: darkgray;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+}
+
 .buttonDelete {
     background-color: crimson;
     border-radius: 5px;
     padding: 5px;
     padding-top: 5px;
     padding-bottom: 5px;
-    color:darkblue;
+    color:ivory;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    border: none;
+}
+
+.buttonDelete:hover {
+    cursor: pointer;
+    background-color: rgb(165, 31, 58);
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    color: darkgray;
     text-align: center;
     display: inline-block;
     font-size: 16px;
@@ -93,19 +134,6 @@ a:visited{color: floralwhite;}
 }
 
 .button1:hover {
-    cursor: pointer;
-    background-color: darkslategrey;
-    border-radius: 5px;
-    padding: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: darkgray;
-    text-align: center;
-    display: inline-block;
-    font-size: 16px;
-}
-
-.buttonDelete:hover {
     cursor: pointer;
     background-color: darkslategrey;
     border-radius: 5px;
