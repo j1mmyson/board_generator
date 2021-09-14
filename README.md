@@ -1,6 +1,6 @@
 ## Link
 
-<http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
+> 서버를 유지할 돈이 없어서 데모페이지 내렸습니다 ㅜ  
 
 ![Index Page](https://github.com/j1mmyson/board_generator/blob/main/img/indexPage.PNG?raw=true)
 
