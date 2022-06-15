@@ -1,8 +1,8 @@
-## Link
-
-> 서버를 유지할 돈이 없어서 데모페이지 내렸습니다 ㅜ  
+## Preview
 
 ![Index Page](https://github.com/j1mmyson/board_generator/blob/main/img/indexPage.PNG?raw=true)
+
+![](https://github.com/j1mmyson/j1mmyson.github.io/blob/main/assets/img/posts/go/generate_board/board.PNG?raw=true)
 
 ## Done
 
