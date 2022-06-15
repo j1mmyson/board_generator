@@ -1,3 +1,5 @@
+# Board-Generator
+
 ## Preview
 
 ![Index Page](https://github.com/j1mmyson/board_generator/blob/main/img/indexPage.PNG?raw=true)
